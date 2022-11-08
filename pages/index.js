@@ -1,26 +1,45 @@
-import config from "../config.json"
+import config from "../config.json";
+import styled from "styled-components";
+import { CSSReset } from "../src/components/CSSReset";
+import Menu from "../src/components/Menu";
+import { StyledTimeline } from "../src/components/Timeline";
 
 function HomePage() {
-    //const mensagem = "Bem vindo ao AluraTube!";
-    const estilosDaHomePage = { backgroundColor: "red" };
+    const estilosDaHomePage = {
+        // backgroundColor: "red" 
+    };
+
+    // console.log(config.playlists);
+
     return (
-        <div style={estilosDaHomePage}>
-            <Menu></Menu>
-            <Header></Header>
-            <TimeLine></TimeLine>
-        </div>
+        <>
+            <CSSReset />
+            <div style={{
+                display: "flex",
+                flexDirection: "column",
+                flex: 1,
+                // backgroundColor: "red",
+            }}>
+                <Menu />
+                <Header />
+                <Timeline playlists={config.playlists}>
+                    Conteúdo
+                </Timeline>
+            </div>
+        </>
     );
 }
 
 export default HomePage
 
-function Menu() {
-    return (
-        <div>
-            Menu
-        </div>
-    )
-}
+// function Menu() {
+//     return (
+//         <div>
+//             Menu
+//         </div>
+//     )
+// }
+
 
 const StyledHeader = styled.div`
     img {
@@ -40,19 +59,51 @@ const StyledHeader = styled.div`
 function Header() {
     return (
         <StyledHeader>
-            
-            <section className="user-info"    
-                <img scr={"https://github.com/${config.github}.png"} />
-                {config.name}
-                {config.job}
-            
+            {/* <img src="banner" /> */}
+            <section className="user-info">
+                <img src={`https://github.com/${config.github}.png`} />
+                <div>
+                    <h2>
+                        {config.name}
+                    </h2>
+                    <p>
+                        {config.job}
+                    </p>
+                </div>
+            </section>
         </StyledHeader>
     )
 }
-function TimeLine() {
+
+function Timeline(propriedades) {
+    // console.log("Dentro do componente", propriedades.playlists);
+    const playlistNames = Object.keys(propriedades.playlists);
+    // Statement
+    // Retorno por expressão
     return (
-        <div>
-            TimeLine
-        </div>
+        <StyledTimeline>
+            {playlistNames.map((playlistName) => {
+                const videos = propriedades.playlists[playlistName];
+                console.log(playlistName);
+                console.log(videos);
+                return (
+                    <section>
+                        <h2>{playlistName}</h2>
+                        <div>
+                            {videos.map((video) => {
+                                return (
+                                    <a href={video.url}>
+                                        <img src={video.thumb} />
+                                        <span>
+                                            {video.title}
+                                        </span>
+                                    </a>
+                                )
+                            })}
+                        </div>
+                    </section>
+                )
+            })}
+        </StyledTimeline>
     )
 }
